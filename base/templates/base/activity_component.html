@@ -1,0 +1,28 @@
+{% block content %}
+
+<h3>Recent Activity</h3>
+<hr>
+{% for message in room_messages %}
+    <div>
+        {% if request.resolver_match.url_name != 'user-profile' %}
+        <small><a href = "{% url 'user-profile' message.user.id %}">@{{message.user}}</a></small>
+        {% else %}
+        <small><p>@{{message.user}}</p></small>
+        {%endif%}
+
+        {% if message.updated %}
+            <small>{{message.updated|timesince}} ago</small>
+        {% else %}
+            <small>{{message.created|timesince}} ago</small>
+        {% endif %}
+        <small>replied to the room "{{message.room}}"</small>
+
+        <p>{{message}}</p>
+        {% if request.user == message.user %}
+            <a href="{% url 'delete-message' message.id %}">Delete</a>
+        {% endif %}
+        <hr>
+    </div>
+{% endfor %}
+
+{% endblock %}
